@@ -1,6 +1,6 @@
 ---
 plan: morning-digest
-status: ready
+status: done
 owner: rook
 opened: 2026-10-29
 ---
@@ -77,3 +77,16 @@ page again with `LANE_MARKER` unset (the banner reads "no marker set") and uploa
 link. Move this plan to `docs/plans/done/` with its issue list.
 
 Done when: the preview link no longer shows the lane marker.
+
+## Issues
+
+| # | Issue | Blocked by | Worker | Closed |
+|---|-------|------------|--------|--------|
+| 1 | Commit src/digest/types.ts and read.ts stub | none | opus-5.5 · medium | done |
+| 2 | Run log reader in src/digest/ | #1 | opus-5.5 · medium | done |
+| 3 | Digest page: GET /digest/:night | #1 | sonnet-5.5 · low | done |
+| 4 | Digest JSON: GET /api/digest/:night | #1 | haiku-4.5 · low (fix by orchestrator) | done |
+| 5 | Board links each night to its digest with counts | #1 | sonnet-5.5 · low | done |
+| 6 | Route tests for digest page and JSON | #1 | sonnet-5.5 · medium | done |
+| 7 | Preview: save the digest as one HTML and publish it | #3 | orchestrator · sonnet-5.5 | done |
+| 8 | Clean up: remove marker from preview, move plan to done | #7 | orchestrator · sonnet-5.5 | done |
