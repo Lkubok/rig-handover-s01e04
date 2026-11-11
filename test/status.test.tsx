@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import * as read from '../src/digest/read.js';
 import { createApp } from '../src/app.js';
 
 const config = { adapter: 'shim', installed: '2026-10-29T14:06:00+01:00', beatEverySeconds: 60, runsDir: 'runs' };
@@ -11,6 +12,27 @@ describe('status board', () => {
     expect(res.status).toBe(200);
     expect(html).toContain('TEST-MARKER');
     expect(html).toContain('2026-10-28');
+  });
+
+  it('links each night to its digest with counts', async () => {
+    const spy = vi.spyOn(read, 'readNight').mockImplementation((_d, night) =>
+      night === '2026-10-28'
+        ? { night, rows: [], badLines: 0, counts: { ok: 5, retry: 2, fail: 1 } }
+        : null,
+    );
+    const html = await (await createApp(config).request('/')).text();
+    expect(html).toContain('href="/digest/2026-10-28"');
+    expect(html).toContain('href="/digest/2026-10-27"');
+    expect(html).toContain('ok 5 · retry 2 · fail 1');
+    expect(html).toContain('ok — · retry — · fail —');
+    spy.mockRestore();
+  });
+
+  it('survives a reader that throws', async () => {
+    const res = await createApp(config).request('/');
+    const html = await res.text();
+    expect(res.status).toBe(200);
+    expect(html).toContain('href="/digest/2026-10-28"');
   });
 
   it('health answers with the lane id', async () => {
